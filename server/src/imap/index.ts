@@ -2,6 +2,7 @@ const imapClient = require('emailjs-imap-client').default;
 import { ParsedMail, simpleParser } from 'mailparser';
 
 import { IServerInfo } from '../ServerInfo';
+import { logger } from '../utils/logger';
 
 export interface IMailbox {
   name: string;
@@ -17,14 +18,17 @@ export interface IMessage {
   messageId: string;
   date: string;
   from: string;
+  to?: string;
   subject: string;
   body?: string;
+  flags?: string[];
 }
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 export class Engine {
   private static serverInfo: IServerInfo;
+
   constructor(withServerInfo: IServerInfo) {
     Engine.serverInfo = withServerInfo;
   }
@@ -37,7 +41,7 @@ export class Engine {
       );
     client.logLevel = client.LOG_LEVEL_NONE;
     client.onError = (error: Error) => {
-      console.log('IMAP.Engine.listMailBoxes(): connection error', error);
+      logger.error('IMAP.Engine.listMailBoxes(): connection error', error);
     };
 
     await client.connect();
@@ -71,7 +75,7 @@ export class Engine {
     }
 
     const messages: any[] = await client.listMessages(
-        forMailbox.mailboxName, '1:*', ['uid', 'envelope'],
+        forMailbox.mailboxName, '1:10', ['uid', 'flags', 'envelope'],
     );
 
     await client.close();
@@ -79,9 +83,11 @@ export class Engine {
     const filteredMessages: IMessage[] = [];
     messages.forEach((message: any) => {
       filteredMessages.push({
-        messageId: message.id,
+        flags: message.flags,
+        messageId: message.uid,
         date: message.envelope.date,
         from: message.envelope.from[0].address,
+        to: message.envelope.to[0].address,
         subject: message.envelope.subject,
       });
     });

@@ -10,6 +10,7 @@ export interface IContact {
 
 export class Engine {
   private db: Nedb;
+
   constructor() {
     this.db = new dataStore({
       filename: path.join(__dirname, 'contacts.db'),

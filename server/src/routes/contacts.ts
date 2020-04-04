@@ -10,18 +10,18 @@ contactsRouter.route('/contacts')
   try {
     const contactsEngine: Contacts.Engine = new Contacts.Engine();
     const contact: Contacts.IContact = await contactsEngine.addContact(body);
-    res.json(contact);
+    res.status(201).json(contact);
   } catch (error) {
-    res.status(500).send('Email client error');
+    res.status(400).json({ error, success: false });
   }
 })
 .get(async (req:Request, res:Response) => {
   try {
     const contactsEngine: Contacts.Engine = new Contacts.Engine();
     const contacts: Contacts.IContact[] = await contactsEngine.listContacts();
-    res.json(contacts);
+    res.status(200).json(contacts);
   } catch (error) {
-    res.status(500).send('Email client error');
+    res.status(400).json({ error, success: false });
   }
 });
 
@@ -31,8 +31,8 @@ contactsRouter.route('/contacts/:contactId')
   try {
     const contactsEngine: Contacts.Engine = new Contacts.Engine();
     const deleteCount: number = await contactsEngine.deleteContact(contactId);
-    res.json(deleteCount);
+    res.status(204).json(deleteCount);
   } catch (error) {
-    res.status(500).send('Email client error');
+    res.status(404).json({ error, success: false });
   }
 });
