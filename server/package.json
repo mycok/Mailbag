@@ -8,7 +8,9 @@
     "build": "tsc",
     "serve": "node ./dist/main.js",
     "start": "yarn run build && yarn run serve",
-    "dev": "nodemon -e ts --exec yarn run start"
+    "dev": "nodemon -e ts --exec yarn run start",
+    "lint": "tslint server/src/**/*",
+    "fix": "tslint server/src/**/* --fix"
   },
   "repository": {
     "type": "git",
@@ -25,12 +27,18 @@
     "url": "https://github.com/mycok/Mailbag/issues"
   },
   "homepage": "https://github.com/mycok/Mailbag#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run lint"
+    }
+  },
   "devDependencies": {
     "@types/express": "^4.17.4",
     "@types/mailparser": "^2.7.2",
     "@types/nedb": "^1.8.9",
     "@types/node": "^13.9.8",
     "@types/nodemailer": "^6.4.0",
+    "husky": "^4.2.3",
     "nodemon": "^2.0.2",
     "tslint": "^6.1.0",
     "tslint-config-airbnb": "^5.11.2",

@@ -1,19 +1,16 @@
 import mailer from 'nodemailer/lib/mailer';
 import nodemailer,  { SendMailOptions, SentMessageInfo } from 'nodemailer';
-// import   { SendMailOptions, SentMessageInfo } from 'nodemailer';
 
-import { IServerInfo } from '../interfaces/IServerInfo';
+import { IServerInfo } from '../ServerInfo';
 
-// const nodemailer = require('nodemailer');
-
-export class Worker {
+export class Engine {
   private static serverInfo: IServerInfo;
   constructor(withServerInfo: IServerInfo) {
-    Worker.serverInfo = withServerInfo;
+    Engine.serverInfo = withServerInfo;
   }
 
   public async sendMessage(withOptions: SendMailOptions) {
-    const transport: mailer = nodemailer.createTransport(Worker.serverInfo.smtp);
+    const transport: mailer = nodemailer.createTransport(Engine.serverInfo.smtp);
     try {
       const info = await transport.sendMail(withOptions);
       return info.messageId;
@@ -22,4 +19,3 @@ export class Worker {
     }
   }
 }
-
