@@ -1,28 +1,43 @@
-import ImapClient from 'emailjs-imap-client';
+const imapClient = require('emailjs-imap-client').default;
 import { ParsedMail, simpleParser } from 'mailparser';
 
-import { IServerInfo } from '../interfaces/IServerInfo';
-import { IMailboxParams } from '../interfaces/IMailboxParams';
-import { IMailbox } from '../interfaces/IMailbox';
-import { IMessage } from '../interfaces/IMessage';
+import { IServerInfo } from '../ServerInfo';
+
+export interface IMailbox {
+  name: string;
+  path: string;
+}
+
+export interface IMailboxParams {
+  mailboxName: string;
+  messageId?: number;
+}
+
+export interface IMessage {
+  messageId: string;
+  date: string;
+  from: string;
+  subject: string;
+  body?: string;
+}
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-export class Worker {
+export class Engine {
   private static serverInfo: IServerInfo;
   constructor(withServerInfo: IServerInfo) {
-    Worker.serverInfo = withServerInfo;
+    Engine.serverInfo = withServerInfo;
   }
 
   private async connectToServer(): Promise<any> {
-    const client: any = new ImapClient.default(
-          Worker.serverInfo.imap.host,
-          Worker.serverInfo.imap.port,
-          { auth: Worker.serverInfo.imap.auth },
+    const client: any = new imapClient(Engine.serverInfo.imap.host, Engine.serverInfo.imap.port, {
+      auth: Engine.serverInfo.imap.auth,
+      useSecureTransport: true,
+    },
       );
     client.logLevel = client.LOG_LEVEL_NONE;
     client.onError = (error: Error) => {
-      console.log('IMAP.Worker.listMailBoxes(): connection error', error);
+      console.log('IMAP.Engine.listMailBoxes(): connection error', error);
     };
 
     await client.connect();
@@ -31,7 +46,7 @@ export class Worker {
 
   public async listMailboxes(): Promise<IMailbox[]> {
     const client: any = await this.connectToServer();
-    const mailboxes: any = await client.listMailBoxes();
+    const mailboxes: any = await client.listMailboxes();
     await client.close();
 
     const filteredMailboxes: IMailbox[] = [];
@@ -77,7 +92,7 @@ export class Worker {
   public async getMessageBody(forMailbox: IMailboxParams): Promise<string | undefined> {
     const client: any = await this.connectToServer();
     const messages: any[] = await client.listMessages(
-      forMailbox.mailboxName, forMailbox.messageId, ['body[]'], { byUid: true }
+      forMailbox.mailboxName, forMailbox.messageId, ['body[]'], { byUid: true },
     );
     const parsed: ParsedMail = await simpleParser(messages[0]['body[]']);
     await client.close();
