@@ -11,10 +11,10 @@ mailboxRouter.route('/messages')
   const { body } = req;
   try {
     const smtpEngine: SMTP.Engine = new SMTP.Engine(serverInfo);
-    await smtpEngine.sendMessage(body);
-    res.json('ok');
+    const info = await smtpEngine.sendMessage(body);
+    res.status(200).json(info);
   } catch (error) {
-    res.send('error');
+    res.status(400).send('Email client error');
   }
 });
 
@@ -23,7 +23,7 @@ mailboxRouter.route('/mailboxes')
   try {
     const imapEngine: IMAP.Engine = new IMAP.Engine(serverInfo);
     const mailboxes: IMAP.IMailbox[] = await imapEngine.listMailboxes();
-    res.json(mailboxes);
+    res.status(200).json(mailboxes);
   } catch (error) {
     res.status(500).send('Email client error');
   }
@@ -35,9 +35,9 @@ mailboxRouter.route('/mailboxes/:mailboxName')
   try {
     const imapEngine: IMAP.Engine = new IMAP.Engine(serverInfo);
     const messages: IMAP.IMessage[] = await imapEngine.listMessages({ mailboxName });
-    res.json(messages);
+    res.status(200).json(messages);
   } catch (error) {
-    res.status(500).send('Email client error');
+    res.status(404).send('Email client error');
   }
 });
 
@@ -49,9 +49,9 @@ mailboxRouter.route('/messages/:mailboxName/:messageId')
     const messageBody: IMAP.IMessage[] | any = await imapEngine.getMessageBody({
       mailboxName, messageId: parseInt(messageId, 10),
     });
-    res.send(messageBody);
+    res.status(200).send(messageBody);
   } catch (error) {
-    res.status(500).send('Email client error');
+    res.status(404).send('Email client error');
   }
 })
 .delete(async (req:Request, res:Response) => {
@@ -59,8 +59,8 @@ mailboxRouter.route('/messages/:mailboxName/:messageId')
   try {
     const imapEngine: IMAP.Engine = new IMAP.Engine(serverInfo);
     await imapEngine.deleteMessage({ mailboxName, messageId: parseInt(messageId, 10) });
-    res.send('ok');
+    res.status(204).send('success');
   } catch (error) {
-    res.send('Email client error');
+    res.status(404).send('Email client error');
   }
 });

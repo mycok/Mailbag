@@ -5,6 +5,7 @@ import { IServerInfo } from '../ServerInfo';
 
 export class Engine {
   private static serverInfo: IServerInfo;
+
   constructor(withServerInfo: IServerInfo) {
     Engine.serverInfo = withServerInfo;
   }
@@ -15,7 +16,7 @@ export class Engine {
       const info = await transport.sendMail(withOptions);
       return info.messageId;
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 }
