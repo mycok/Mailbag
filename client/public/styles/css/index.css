@@ -1,0 +1,31 @@
+body {
+    --ebony-white: #090909;
+    --white-ebony: #fff;
+    --white-ebony-rgb: rgba(255, 255, 255, 0.5);
+    --oxford-blue-mystic: #3b4555;
+    --ebony-clay-athens-gray: #e9edf2;
+    --oxford-blue-white: #3b4555;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: var(--oxford-blue-mystic);
+    color: var(--white-ebony);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+  }
+  
