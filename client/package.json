@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
+    "build": "webpack --mode development --config webpack.config.js",
     "dev": "webpack-dev-server  --mode development --config webpack.config.js"
   },
   "repository": {
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/mycok/Mailbag#readme",
   "devDependencies": {
+    "@svgr/webpack": "^5.3.1",
     "@types/material-ui": "^0.21.7",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",

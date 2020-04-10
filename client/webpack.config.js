@@ -8,7 +8,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.jsx', '.json'],
+        extensions: ['.tsx', '.ts', '.js', '.jsx', '.json', '.svg'],
     },
     performance: {
         hints: false
@@ -29,6 +29,10 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.svg$/,
+                use: ['@svgr/webpack'],
             }
         ]
     },
