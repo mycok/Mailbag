@@ -3,18 +3,18 @@ import { createMuiTheme } from '@material-ui/core/styles';
 export const appTheme = createMuiTheme({
   palette: {
     primary: {
-      main: '#a6ceee',
+      main: '#ff5722',
     },
     secondary: {
-      main: '#e9edf2',
+      main: '#212121',
     },
     error: {
-      main: '#a6ceee',
+      main: '#212121',
     },
     action: {
-      active: '#a6ceee',
+      active: '#212121',
       hover: '#4c4c4c',
-      selected: '#a6ceee',
+      selected: '#212121',
     },
     typography: {
       fontFamily: [
